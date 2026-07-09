@@ -1,0 +1,5 @@
+region,max_element_size_mm,min_element_size_mm
+inter_winding_gap_sensor_region,2.0,0.5
+winding_conductors,3.0,1.0
+iron_core,8.0,2.0
+surrounding_air,20.0,5.0

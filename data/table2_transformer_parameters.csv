@@ -1,0 +1,17 @@
+parameter,value,unit
+rated_capacity,3.6,kVA
+rated_voltage,220/36,V
+hv_winding_turns,122,turns
+lv_winding_turns,20,turns
+hv_winding_outer_diameter,170,mm
+lv_winding_outer_diameter,145,mm
+hv_winding_height,200,mm
+lv_winding_height,200,mm
+hv_winding_inner_diameter,150,mm
+lv_winding_inner_diameter,125,mm
+core_cross_section,45x80,mm^2
+core_window_height,220,mm
+inter_winding_gap,5,mm
+core_limb_length,340,mm
+insulation_layer_thickness,3,mm
+core_stacking_factor,0.96,dimensionless

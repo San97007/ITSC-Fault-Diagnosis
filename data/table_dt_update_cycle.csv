@@ -1,0 +1,5 @@
+category,parameters,frequency,trigger
+operating_conditions,"I1;f",100ms,periodic
+fidelity_assessment,E(P_V),100ms,periodic
+material_recalibration,mu_eff,on_demand,"E(P_V) < 0.85"
+fault_state,"z_h;M",5s,post_PSO_inversion

@@ -1,0 +1,3 @@
+parameter,experimental_value,inversion_value,absolute_error,percentage_error
+z_mm,130.0,139.0,9.0,7.58
+M_mT,564.7,597.6,32.9,5.83
