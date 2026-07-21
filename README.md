@@ -4,10 +4,9 @@ This repository accompanies the manuscript and provides:
 
 1. A runnable Python implementation of the two custom algorithms described
    in the manuscript:
-   - **Composite utility-based sensor selection** (Algorithm 1, Section
+   - *Composite utility-based sensor selection*(Algorithm 1, Section
      "Multi-sensor Information Fusion of Micromagnetic Field").
-   - **PSO-based ITSC fault inversion** (Section "ITSC Diagnosis Based on
-     Particle Swarm Optimization"), using the exact hyperparameters in
+   - *PSO-based ITSC fault inversion*, using the exact hyperparameters in
      Table "Complete PSO Parameter Configuration".
 2. All summary/derived data tables reported in the manuscript, as CSV
    files with a data dictionary.
