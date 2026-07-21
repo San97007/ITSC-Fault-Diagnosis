@@ -21,6 +21,22 @@ licensing.
 | `table_strategy_comparison.csv` | Table (tab:strategy) | Inversion errors under physical-only / virtual-only / physical-virtual fusion strategies (ablation-style comparison) | Authors' ablation-style comparison across the six trials |
 | `table3_final_inversion_result.csv` | Table 3 | Experimental vs. inverted fault location/severity for the physical validation case | Authors' physical transformer ITSC experiment |
 | `table_dt_update_cycle.csv` | Table (tab:dtcycle) | Digital twin parameter update categories, frequencies, and trigger conditions | Authors' DT synchronization design |
+| `table_ablation_sensor.csv` | Table (tab:ablation_sensor) | Sensor-selection ablation: e_z/e_M for all-12 / selected-4 / random-4 sensor configurations, per trial | Generated with `code/run_ablation_sensor_selection.py` (synthetic measurements; see caveat below) |
+| `table_ablation_pso.csv` | Table (tab:ablation_pso) | Inversion-method ablation: e_z/e_M/time for PSO vs. grid search vs. peak detection | Generated with `code/run_ablation_inversion_method.py` (synthetic measurements; see caveat below) |
+| `table_ablation_dt.csv` | Table (tab:ablation_dt) | DT calibration ablation: domain-gap metrics for calibrated vs. static-uncalibrated FE model | Calibrated row reuses `table_domaingap.csv`; static row requires a new COMSOL run (see placeholders) |
+
+## Raw experimental data (already present in this repository)
+
+| File | Likely contents (inferred from filename/size) | Status |
+|---|---|---|
+| `/220-36V 20T NO FAULTS.rar` (repository root, ~9.5 MB) | Raw Hall-sensor DAQ export for the healthy-condition (no-fault) baseline on the 220/36 V, 20-turn LV winding prototype (Table 2) | **Needs a short description file** (see `data/RAW_DATA_README.md`) specifying: which of the 12 S49E sensors are included, sampling rate, file format inside the archive, and how it maps to Table "tab:persensor" (healthy columns). |
+| `/data/20241113.rar` (~23.2 MB) | Raw acquisition session dated 2024-11-13, likely covering one or more ITSC fault trials (Tables 1, 3, and/or "tab:persensor" ITSC columns) | **Needs a short description file** (see `data/RAW_DATA_README.md`) specifying: which fault location(s)/trial(s) are covered, sampling rate, file format, and channel-to-sensor mapping. |
+
+Raw archives are valuable for reproducibility but, per the Editor's stated
+concern about dataset transparency, a binary archive without an
+accompanying description does not by itself resolve the "insufficiently
+described" issue. Please complete `data/RAW_DATA_README.md` with the
+actual acquisition details before the next submission.
 
 ## Important note on raw waveform data
 

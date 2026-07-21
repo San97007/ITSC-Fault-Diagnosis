@@ -1,0 +1,5 @@
+configuration,state,MAE_mT,RMSE_mT,cosine_similarity_E_P_V
+calibrated_DT,healthy,11.3,12.0,0.987
+calibrated_DT,itsc_z130mm,14.5,16.6,0.963
+static_uncalibrated_FE,healthy,TO_BE_MEASURED,TO_BE_MEASURED,TO_BE_MEASURED
+static_uncalibrated_FE,itsc_z130mm,TO_BE_MEASURED,TO_BE_MEASURED,TO_BE_MEASURED

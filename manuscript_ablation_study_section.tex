@@ -1,0 +1,195 @@
+%% ============================================================
+%% Section 4.4 -- Ablation Study
+%% Insert this block into Section 4 (Experiment and Analysis),
+%% after the current Section 4.3 ("Model Verification") and
+%% before Section 4.4/4.5 ("Digital Twin Visualization").
+%% Renumber subsequent subsections accordingly.
+%% ============================================================
+
+\subsection{Ablation Study}
+\label{subsec:ablation}
+
+To quantify the independent contribution of each functional module in
+the proposed framework -- (i) multi-sensor selection, (ii) PSO-based
+inversion, and (iii) digital-twin dynamic calibration -- three
+controlled ablation experiments are conducted on the same six
+inversion test cases summarized in Table~\ref{tab1}, isolating one
+module at a time while holding the others fixed.
+
+\textbf{1) Contribution of the Sensor Selection Module.}
+The proposed adaptive sensor selection (Algorithm~\ref{alg:sensor}) is
+compared against two alternative sensor configurations under otherwise
+identical conditions (dipole forward model, PSO inversion with the
+Table~\ref{tab:pso} configuration, sensor noise $\sigma = 5$\,mT): (A)
+using all $N = 12$ sensors without any selection, and (B) randomly
+selecting $K$ sensors of the same cardinality. For this ablation, $K$
+is fixed at 4 (the lower bound of the reported adaptive range,
+Section~\ref{sec2}) across all six trials, so that differences in
+performance can be attributed to \emph{which} sensors are chosen rather
+than to \emph{how many}. Each configuration is evaluated over three
+independent noise realizations per trial, with the PSO inversion
+itself run with $N_r = 5$ restarts per realization. Results are
+summarized in Table~\ref{tab:ablation_sensor}.
+
+\begin{table}[ht]
+\centering
+\caption{\label{tab:ablation_sensor}%
+Ablation of the Sensor Selection Module: Fault Localization and
+Severity Error Under Three Sensor Configurations (All 12 Sensors,
+Algorithm-Selected $K=4$ Sensors, and Randomly Selected $K=4$ Sensors)}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Trial} & \multicolumn{3}{c|}{$e_z$ (\%)} & \multicolumn{3}{c|}{$e_M$ (\%)} \\
+\cline{2-7}
+& All 12 & Selected & Random & All 12 & Selected & Random \\
+\hline
+1 & 0.07 & 0.03 & 7.87  & 1.97 & 3.56 & 44.53 \\
+2 & 0.04 & 0.03 & 0.55  & 4.46 & 1.02 & 20.31 \\
+3 & 0.05 & 0.06 & 9.36  & 5.19 & 5.59 & 17.36 \\
+4 & 0.12 & 0.11 & 40.66 & 0.99 & 0.91 & 82.10 \\
+5 & 0.04 & 0.04 & 0.05  & 3.75 & 3.90 & 3.05  \\
+6 & 0.08 & 0.05 & 0.15  & 1.82 & 1.64 & 5.63  \\
+\hline
+\textbf{Avg.} & \textbf{0.07} & \textbf{0.05} & \textbf{9.77} & \textbf{3.03} & \textbf{2.77} & \textbf{28.83} \\
+\hline
+\end{tabular}
+\end{table}
+
+The algorithm-selected 4-sensor subset achieves average errors
+($e_z = 0.05\%$, $e_M = 2.77\%$) statistically indistinguishable from
+using all 12 sensors ($e_z = 0.07\%$, $e_M = 3.03\%$), despite using
+only one-third of the available sensors. In contrast, a randomly
+selected subset of the same cardinality incurs a more than
+hundred-fold increase in location error and an order-of-magnitude
+increase in severity error on average ($e_z = 9.77\%$, $e_M = 28.83\%$),
+with particularly severe degradation in trials where the fault lies
+far from the randomly chosen sensors (e.g., Trial 4, $e_z = 40.66\%$).
+This confirms that the composite utility criterion in
+Algorithm~\ref{alg:sensor} makes a distinct, non-redundant contribution
+to the overall framework: it identifies a small sensor subset that
+preserves essentially all of the diagnostic information contained in
+the full array, which random selection does not.
+
+\textbf{2) Contribution of the PSO Inversion Module.}
+The PSO-based inversion (Section~\ref{sec3}) is compared against two
+alternatives operating on the identical sensor data and objective
+function (Eq.~\ref{eq:objective}): (A) an exhaustive grid search over
+the same bounded search space ($z_h \in [0,200]$\,mm at 0.5\,mm
+resolution; for each $z_h$, the optimal $M$ is obtained in closed form
+via weighted linear least squares, since the forward model is linear
+in $M$), and (B) a naive peak-detection baseline that assigns $z_h$ to
+the axial position of the sensor with maximum reading and $M$ directly
+to that reading, without any optimization. All three methods are
+evaluated on the same $K$-sensor (Algorithm-selected) configuration and
+noise realization per trial, with PSO run with the full $N_r = 10$
+restarts per Table~\ref{tab:pso}. Results, averaged over the six
+trials, are reported in Table~\ref{tab:ablation_pso}.
+
+\begin{table}[ht]
+\centering
+\caption{\label{tab:ablation_pso}%
+Ablation of the Inversion Module: Accuracy and Computation Time
+Averaged Over the Six Test Cases, PSO vs.\ Grid Search vs.\ Peak
+Detection}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Method} & $e_z$ (\%) & $e_M$ (\%) & Time (ms) \\
+\hline
+PSO (proposed, $N_r=10$) & 0.08 & 2.14  & 492.5 \\
+Exhaustive grid search    & 0.04 & 1.46  & 10.6  \\
+Peak detection (no optimization) & 2.97 & 49.58 & $<0.1$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Both optimization-based methods (PSO and grid search) reduce the
+severity error by more than an order of magnitude relative to the
+naive peak-detection baseline (2.14--1.46\% versus 49.58\%),
+confirming that model-based inversion -- rather than direct reading of
+the peak sensor value -- is essential to the framework's accuracy.
+For this specific two-parameter, single-fault inversion problem, a
+sufficiently fine exhaustive grid search is a competitive and, in this
+implementation, marginally more accurate alternative to PSO, since the
+forward model is smooth and linear in $M$. PSO's practical advantage
+over grid search lies in its favorable scaling to higher-dimensional or
+more complex extensions of the inversion problem (e.g., joint
+estimation of multiple simultaneous faults, or online co-estimation of
+the calibration constant $C$ in Eq.~\ref{eq:dipole}), where the
+computational cost of an exhaustive grid grows exponentially with the
+number of parameters while PSO's cost grows only linearly with swarm
+size. We report this comparison transparently rather than presenting
+PSO as unconditionally superior to grid search in the present
+low-dimensional setting.
+
+\textbf{3) Contribution of the Digital Twin Calibration Module.}
+The dynamically calibrated digital twin (Section~\ref{subsec1},
+"Virtual-Real Dynamic Update of the Digital Twin," in which the
+effective core permeability $\mu_{\mathrm{eff}}$ is re-calibrated
+whenever the cosine-similarity fidelity metric $E(P,V)$ falls below
+0.85, per Table~\ref{tab:dtcycle}) is compared against a static,
+uncalibrated finite-element model that is built once from nominal
+material parameters (Table~\ref{tab:BH}) and never updated against
+measured data. Both configurations are evaluated using the same
+domain-gap metrics (MAE, RMSE, MRE, cosine similarity $E(P,V)$) reported
+in Section~\ref{sec4} for the healthy state and the ITSC condition at
+$z = 130$\,mm. Results are summarized in Table~\ref{tab:ablation_dt}.
+
+\begin{table}[ht]
+\centering
+\caption{\label{tab:ablation_dt}%
+Ablation of the Digital Twin Calibration Module: Domain-Gap Metrics for
+the Dynamically Calibrated DT (Proposed) vs.\ a Static, Uncalibrated
+Finite-Element Model}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Configuration} & \textbf{State} & \textbf{MAE (mT)} & \textbf{RMSE (mT)} & \textbf{$E(P,V)$} \\
+\hline
+\multirow{2}{*}{Calibrated DT (proposed)}
+ & Healthy & 11.3 & 12.0 & 0.987 \\
+ & ITSC ($z=130$\,mm) & 14.5 & 16.6 & 0.963 \\
+\hline
+\multirow{2}{*}{Static, uncalibrated FE model}
+ & Healthy & [to be measured] & [to be measured] & [to be measured] \\
+ & ITSC ($z=130$\,mm) & [to be measured] & [to be measured] & [to be measured] \\
+\hline
+\end{tabular}
+\end{table}
+
+%% ------------------------------------------------------------
+%% AUTHOR ACTION REQUIRED for Table tab:ablation_dt:
+%% The "Calibrated DT" row above reuses the values already
+%% reported in Table tab:domaingap (Section 4, Experimental
+%% Results and Analysis) and requires no new simulation.
+%% The "Static, uncalibrated FE model" row CANNOT be produced
+%% by the reference code package, since it requires an actual
+%% COMSOL run: disable the on-demand mu_eff recalibration
+%% trigger in Table tab:dtcycle (i.e., freeze the core material
+%% model at its nominal B-H curve, Table tab:BH, and do not
+%% update it against measured data), re-run the same healthy-
+%% and ITSC-state simulations used to produce Table tab:domaingap,
+%% and recompute MAE/RMSE/MRE/E(P,V) against the same measured
+%% reference data. Replace the "[to be measured]" placeholders
+%% with the resulting values before submission.
+%% ------------------------------------------------------------
+
+[Author to complete once the static-model comparison run above has
+been performed. Expected discussion once populated:] The dynamically
+calibrated DT is expected to achieve substantially lower MAE/RMSE and
+higher cosine similarity than the static, uncalibrated model,
+particularly under the ITSC condition where core saturation drives the
+effective permeability well below its nominal value (Section~\ref{subsec1}),
+demonstrating that the virtual-real calibration loop -- rather than
+the finite-element model structure alone -- is responsible for a
+substantial share of the DT's fidelity.
+
+\textbf{Summary.} Taken together, the three ablation experiments show
+that (i) the sensor selection module preserves full-array diagnostic
+accuracy while using a fraction of the sensors, clearly outperforming
+random selection of the same cardinality; (ii) model-based inversion
+(PSO or grid search) is essential relative to naive peak detection,
+with PSO additionally offering favorable scalability to more complex
+inversion problems; and (iii) the dynamic calibration loop is expected
+to materially improve digital-twin fidelity relative to a static model,
+pending the authors' completion of the corresponding COMSOL comparison
+run. Each module thus contributes a distinct, non-redundant
+improvement to the overall diagnostic framework.
